@@ -1,5 +1,5 @@
 import os
-from lib import Input
+from lib.input import Input
 
 input_path = os.path.join(os.path.dirname(__file__), "input.txt")
 

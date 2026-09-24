@@ -1,5 +1,5 @@
 import unittest
-from lib import Input
+from lib.input import Input
 from day1 import solution
 
 test_input = ""
