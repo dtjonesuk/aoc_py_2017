@@ -1,6 +1,6 @@
 $base_url = "https://adventofcode.com/"
 $year = "2017"
-$day = "1"
+$day = "2"
 $session_id = $Env:SESSIONID
 $cookie = [System.Net.Cookie]::new("session", $session_id)
 

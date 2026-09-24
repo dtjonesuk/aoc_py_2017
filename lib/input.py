@@ -22,6 +22,14 @@ class Input():
         lines = self.read_lines()
         return [int(line) for line in lines]
 
+    def read_lines_as_tsv(self):
+        lines = self.read_lines()
+        return [[value.strip() for value in line.split()] for line in lines]
+
+    def read_lines_as_tsv_ints(self):
+        lines = self.read_lines_as_tsv()
+        return [[int(value) for value in line] for line in lines]
+
     def read_lines_as_csv(self):
         lines = self.read_lines()
         return [[value.strip() for value in line.split(',')] for line in lines]
