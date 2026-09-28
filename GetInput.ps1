@@ -61,7 +61,7 @@ function Get-PuzzleInput
 
 }
 
-$day = 4
+$day = 5
 $destination = "day$day"
 
 # create directory
