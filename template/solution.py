@@ -1,7 +1,7 @@
 import os
 from lib.input import Input
 
-input_path = os.path.join(os.path.dirname(__file__), "input.txt")
+input_path = os.path.join(str(os.path.dirname(__file__)), "input.txt")
 
 def part1(data):
     total = 0
