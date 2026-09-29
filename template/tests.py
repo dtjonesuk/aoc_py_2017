@@ -5,16 +5,23 @@ from day5 import solution
 
 class Part1TestCase(unittest.TestCase):
     input = ""
+
+    def setUp(self):
+        self.data = Input(from_string=self.input).read_lines()
+
     def test_input(self):
-        data = Input(from_string=self.input).read_lines()
-        self.assertSequenceEqual(data, [])
+        self.assertSequenceEqual(self.data, [])
 
 
 class Part2TestCase(unittest.TestCase):
     input = ""
-    def test_something(self):
-        data = Input(from_string=self.input).read_lines()
-        pass
+    
+    def setUp(self):
+        self.data = Input(from_string=self.input).read_lines()
+
+    def test_input(self):
+        self.assertSequenceEqual(self.data, [])
+
 
 if __name__ == '__main__':
     unittest.main()
