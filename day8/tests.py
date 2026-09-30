@@ -27,13 +27,21 @@ class Part1TestCase(unittest.TestCase):
 
 
 class Part2TestCase(unittest.TestCase):
-    input = ""
+    input = """b inc 5 if a > 1
+    a inc 1 if b < 5
+    c dec -10 if a >= 1
+    c inc -20 if c == 10
+    """
 
     def setUp(self):
         self.data = Input(from_string=self.input).read_lines()
 
-    def test_input(self):
-        self.assertSequenceEqual(self.data, [])
+    def test_get_highest_register_value(self):
+        instructions = [parse_instruction(line) for line in self.data]
+        cpu = CPU(instructions)
+        cpu.run()
+        result = solution.get_highest_register_value(cpu)
+        self.assertEqual(result, 10)
 
 
 if __name__ == '__main__':

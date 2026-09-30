@@ -1,5 +1,6 @@
 from collections import defaultdict
 from pyparsing import *
+import operator as op
 
 identifier = Word(alphas)
 INC, DEC = Keyword.using_each(["inc", "dec"])
@@ -8,42 +9,34 @@ operator = INC | DEC
 comparator = EQ | NE | LE | LT | GE | GT
 number = pyparsing_common.signed_integer
 
-parser = identifier + operator + number + "if" + identifier + comparator + number
+parser = identifier + operator + number + Suppress("if") + identifier + comparator + number
+
+operator_map = {
+    "==": op.eq,
+    "!=": op.ne,
+    "<=": op.le,
+    "<": op.lt,
+    ">=": op.ge,
+    ">": op.gt,
+    "inc": op.add,
+    "dec": op.sub
+}
 
 
 class Instruction:
     def __init__(self, elems):
         self.destination = elems[0]
-        self.operation = elems[1]
-        self.value = elems [2]
-        self.where = elems[4]
-        self.comparator = elems[5]
-        self.compare_to = elems[6]
-
-    def calculate(self, a, b):
-        if self.operation == "inc":
-            return a + b
-        else:
-            return a - b
-
-    def compare(self, a, b) -> bool:
-        if self.comparator == "==":
-            return a == b
-        elif self.comparator == "!=":
-            return a != b
-        elif self.comparator == "<":
-            return a < b
-        elif self.comparator == ">":
-            return a > b
-        elif self.comparator == "<=":
-            return a <= b
-        else:
-            return a >= b
+        self.operation = operator_map[elems[1]]
+        self.value = elems[2]
+        self.where = elems[3]
+        self.comparator = operator_map[elems[4]]
+        self.compare_to = elems[5]
 
     def __repr__(self):
         return f"{self.destination} {self.operation} {self.value} if {self.where} {self.comparator} {self.compare_to}"
 
-def parse_instruction(s:str) -> Instruction|None:
+
+def parse_instruction(s: str) -> Instruction | None:
     return Instruction(parser.parse_string(s))
 
 
@@ -58,11 +51,13 @@ class CPU:
         # test condition
         a = self.registers[instruction.where]
         b = instruction.compare_to
-        if instruction.compare(a,b):
+        if instruction.comparator(a, b):
             # carry out operation
-            self.registers[instruction.destination] = instruction.calculate(
-                self.registers[instruction.destination],
-                instruction.value)
+            a = self.registers[instruction.destination]
+            b = instruction.value
+            self.registers[instruction.destination] = instruction.operation(a, b)
+
+            # store highest value (if greater than existing highest) for later
             self.highest = max(self.highest, max(self.registers.values()))
 
     def run(self):
