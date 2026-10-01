@@ -3,7 +3,7 @@ from itertools import count
 
 from lib.input import Input
 
-input_path = os.path.join(os.path.dirname(__file__), "input.txt")
+input_path = os.path.join(str(os.path.dirname(__file__)), "input.txt")
 
 data = Input(input_path).read_lines()
 
