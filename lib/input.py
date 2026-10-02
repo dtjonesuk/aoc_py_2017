@@ -1,9 +1,10 @@
 import io
 
 class Input():
-    def __init__(self, input_path: str = "input.txt", from_string:str|None=None):
+    def __init__(self, input_path: str = "input.txt", from_string:str|None=None, strip_empty:bool=True):
         self.input_path = input_path
         self.from_string = from_string
+        self.strip_empty = strip_empty
 
     def open(self):
         if self.from_string is not None:
@@ -15,7 +16,9 @@ class Input():
 
     def read_lines(self):
         with self.open() as f:
-            lines = [line.strip() for line in f.readlines() if len(line.strip()) > 0]
+            lines = [line.strip() for line in f.readlines()]
+            if self.strip_empty:
+                lines = [line.strip() for line in lines if len(line.strip()) > 0]
         return lines
 
     def read_lines_as_ints(self):
