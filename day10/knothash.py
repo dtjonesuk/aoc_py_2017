@@ -1,12 +1,27 @@
 from functools import reduce
 import operator
 
+
 class KnotHash:
     def __init__(self, length):
         self.length = length
         self.position = 0
         self.skip = 0
         self.string = list(range(length))
+
+    def hash(self, s: str):
+        # 1. Convert str to a list of ASCII values
+        lengths = list(map(ord, s)) + [17, 31, 73, 47, 23]
+
+        # 2. Run 64 rounds of hashing
+        for i in range(64):
+            for length in lengths:
+                self.hash_round(length)
+
+        # 3. Calculate dense hash
+        blocks = self.get_dense_hash(16)
+
+        return blocks
 
     def hash_round(self, length: int):
         end = (self.position + length) % self.length
@@ -33,9 +48,9 @@ class KnotHash:
         # increase skip size
         self.skip += 1
 
-    def get_dense_hash(self, block_size:int):
+    def get_dense_hash(self, block_size: int):
         # 1. Split the string into length/block_size blocks of size block_size
-        blocks = [self.string[i:i+block_size] for i in range(0, self.length, block_size)]
+        blocks = [self.string[i:i + block_size] for i in range(0, self.length, block_size)]
 
         # 2. Calculate block[0] xor block[1] xor block[2]... for each block
         dense_hash = [reduce(operator.xor, block, initial=0) for block in blocks]
